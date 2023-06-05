@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "target": "ES2015",
+    "baseUrl": ".",
+    "outDir": "dist",
+    "sourceMap": true,
+    "module": "CommonJS",
+    "strict": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "lib": [
+      "ES2015",
+      "dom"
+    ],
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compileOnSave": true,
+  "watch": true
+}
+
