@@ -28,4 +28,8 @@ export default class TokenService {
             return false;
         }
     }
+
+    public static async RemoveTokens(userId: string): Promise<void> {
+        await Token.destroy({where: {userId}});
+    }
 }

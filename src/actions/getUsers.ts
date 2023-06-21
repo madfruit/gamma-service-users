@@ -13,7 +13,7 @@ export default new class GetUser implements Action{
 
     async execute(payload: Payload<GetUsersPayload>): Promise<GetUsersResult> {
         const {userIds} = payload.params;
-        const users = await UserService.GetUsers(userIds);
+        const users = await UserService.getUsers(userIds);
         return { users };
     }
 }

@@ -1,5 +1,5 @@
 import User from "../models/user";
-import { SafeUser, Role } from 'package-types'
+import {SafeUser, Role} from 'package-types'
 import {App} from "package-app";
 import {uuid} from "uuidv4";
 import {Op} from "sequelize";
@@ -10,15 +10,15 @@ interface userCheckResult {
 }
 
 export class UserService {
-    public static async GetUserById(id: string, safe: boolean = false): Promise<SafeUser> {
-        const attributes = safe? [ 'id', 'email', 'nickname', 'avatar', 'role' ]
-            : [ 'id', 'email', 'nickname', 'avatar', 'role', 'password' ];
-        return User.findByPk(id, { raw: true, attributes });
+    public static async getUserById(id: string, safe: boolean = false): Promise<SafeUser> {
+        const attributes = safe ? ['id', 'email', 'nickname', 'avatar', 'role']
+            : ['id', 'email', 'nickname', 'avatar', 'role', 'password'];
+        return User.findByPk(id, {raw: true, attributes});
     }
 
-    public static async GetUserByEmail(email: string, safe: boolean = false): Promise<User | undefined> {
-        const attributes = safe? [ 'id', 'email', 'nickname', 'avatar', 'role' ]
-            : [ 'id', 'email', 'nickname', 'avatar', 'role', 'password' ]
+    public static async getUserByEmail(email: string, safe: boolean = false): Promise<User | undefined> {
+        const attributes = safe ? ['id', 'email', 'nickname', 'avatar', 'role']
+            : ['id', 'email', 'nickname', 'avatar', 'role', 'password']
         try {
             return User.findOne({
                 where: {
@@ -30,7 +30,7 @@ export class UserService {
         }
     }
 
-    public static async RegisterUser(email: string, nickname: string, password: string, avatar?: string): Promise<boolean> {
+    public static async registerUser(email: string, nickname: string, password: string, avatar?: string): Promise<boolean> {
         try {
             await User.create({
                 id: uuid(),
@@ -47,7 +47,7 @@ export class UserService {
         }
     }
 
-    public static async CheckUserEmailAndNickname(email: string, nickname: string): Promise<userCheckResult> {
+    public static async checkUserEmailAndNickname(email: string, nickname: string): Promise<userCheckResult> {
         const users = await User.findAll({
             where: {
                 [Op.or]: [
@@ -58,11 +58,11 @@ export class UserService {
         });
         const result: userCheckResult = {success: true, message: ''};
         users.forEach(user => {
-            if(user.email === email) {
+            if (user.email === email) {
                 result.success = false;
                 result.message = 'Користувач з таким e-mail вже зареєстрований!';
             }
-            if(user.nickname === nickname) {
+            if (user.nickname === nickname) {
                 result.success = false;
                 result.message += '\nНікнейм зайнятий!';
             }
@@ -70,9 +70,27 @@ export class UserService {
         return result;
     }
 
-    public static async GetUsers(ids: string[]): Promise<SafeUser[]> {
-        return User.findAll({where: {id: ids}, attributes: [ 'id', 'email', 'nickname', 'avatar', 'role' ]});
+    public static async getUsers(ids: string[]): Promise<SafeUser[]> {
+        return User.findAll({where: {id: ids}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
     }
 
-    // public static async BanUser(id: string, reason: string): Promise<>
+    public static async getUsersByRole(role: string): Promise<SafeUser[]> {
+        return User.findAll({where: {role}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
+    }
+
+    public static async getUsersByNickname(nickname: string, role?: Role): Promise<SafeUser[]> {
+        if(role) {
+            return User.findAll({where: {nickname, role}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
+        } else {
+            return User.findAll({where: {nickname}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
+        }
+    }
+
+    public static async updateUser(userId: string, user: Partial<User>): Promise<void> {
+        await User.update(user, { where: {id: userId} });
+    }
+
+    public static async deleteUser(id: string): Promise<void> {
+        await User.destroy({where: {id}});
+    }
 }

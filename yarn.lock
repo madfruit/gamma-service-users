@@ -1108,7 +1108,7 @@ p-timeout@^4.1.0:
 
 "package-types@git+ssh://git@gitlab.com:fedchenkov-graduate-work/package-types.git":
   version "1.0.0"
-  resolved "git+ssh://git@gitlab.com:fedchenkov-graduate-work/package-types.git#c1ea62baa1a83b25db26fd50b5400e2878791765"
+  resolved "git+ssh://git@gitlab.com:fedchenkov-graduate-work/package-types.git#04bf876f6890b8e7f2e4e172724eff8da9b447fb"
   dependencies:
     "@types/express-fileupload" "^1.4.1"
     express-fileupload "^1.4.0"

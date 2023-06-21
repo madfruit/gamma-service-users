@@ -1,10 +1,10 @@
 import { Action, Payload } from 'package-app';
-import {GetUserByEmailPayload, GetUserPayload, GetUserResult, UsersActionName} from "package-types";
+import {GetUserByEmailPayload, UsersActionName} from "package-types";
 import {UserService} from "../services/user";
 
 export default new class GetUser implements Action{
     getName(): string{
-        return UsersActionName.GetUser;
+        return UsersActionName.GetUserByEmail;
     }
 
     getValidationSchema(): any {
@@ -14,7 +14,7 @@ export default new class GetUser implements Action{
     }
 
     async execute(payload: Payload<GetUserByEmailPayload>) {
-        return UserService.GetUserByEmail(payload.params.email);
+        return UserService.getUserByEmail(payload.params.email);
     }
 }
 

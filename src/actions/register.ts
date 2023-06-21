@@ -22,10 +22,11 @@ export default new class Register implements Action {
     async execute(payload: Payload<RegisterPayload>): Promise<RegisterResult> {
         const {email, nickname, password, avatar: avatarFile} = payload.params;
         let success = false;
-        const checkResult = await UserService.CheckUserEmailAndNickname(email, nickname);
+        const checkResult = await UserService.checkUserEmailAndNickname(email, nickname);
         if (!checkResult.success) {
             return checkResult;
         }
+        let avatarKey;
         if (!avatarFile) {
             App.logError('No avatar sent');
             return {success, message: 'Не надіслано файл'};
@@ -34,11 +35,10 @@ export default new class Register implements Action {
             App.logError('Array sent instead of a file', avatarFile);
             return {success, message: 'Додано більше одного файлу. Будь ласка, спробуйте ще раз з одним файлом'};
         }
-        let avatarKey;
         try {
-            const { fileKeys } = await App.call<UploadFilesPayload, UploadFilesResult>(ServiceName.Files, FilesActionName.UploadFiles, {files: {avatar: avatarFile}});
-            const { avatar } = fileKeys;
-            if(!avatar) {
+            const {fileKeys} = await App.call<UploadFilesPayload, UploadFilesResult>(ServiceName.Files, FilesActionName.UploadFiles, {files: {avatar: avatarFile}});
+            const {avatar} = fileKeys;
+            if (!avatar) {
                 App.logError('File upload error');
                 return {success, message: 'Не вдалося завантажити файл! Спробуйте ще раз'};
             }
@@ -49,7 +49,7 @@ export default new class Register implements Action {
         const hashedPassword = await encrypt(password);
         success = true;
         try {
-            success = await UserService.RegisterUser(email, nickname, hashedPassword, avatarKey);
+            success = await UserService.registerUser(email, nickname, hashedPassword, avatarKey);
         } catch (err) {
             App.logError(err);
             return {

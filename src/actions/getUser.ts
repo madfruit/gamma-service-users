@@ -11,8 +11,9 @@ export default new class GetUser implements Action{
         return {};
     }
 
-    async execute(payload: Payload<GetUserPayload>) {
-        return UserService.GetUserById(payload.params.id);
+    async execute(payload: Payload<GetUserPayload>): Promise<GetUserResult> {
+        const user = await UserService.getUserById(payload.params.userId);
+        return { user };
     }
 }
 

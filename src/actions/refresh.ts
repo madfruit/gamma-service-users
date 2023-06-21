@@ -18,7 +18,7 @@ export default new class Refresh implements Action{
         const { refresh} = payload.params;
         try {
             const userId = await TokenService.checkAndGetUserId(refresh, TokenType.Refresh);
-            const user = await UserService.GetUserById(userId, true);
+            const user = await UserService.getUserById(userId, true);
             if (!user) {
                 throw new Error(`User with id ${userId} does not exist!`)
             }

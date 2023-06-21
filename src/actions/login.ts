@@ -16,7 +16,7 @@ export default new class Login implements Action{
 
     async execute(payload: Payload<LoginPayload>): Promise<LoginResult> {
         const { email, password } = payload.params;
-        const user = await UserService.GetUserByEmail(email);
+        const user = await UserService.getUserByEmail(email);
         if(!user) {
             return { success: false }
         }
