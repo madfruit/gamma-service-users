@@ -74,16 +74,8 @@ export class UserService {
         return User.findAll({where: {id: ids}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
     }
 
-    public static async getUsersByRole(role: string): Promise<SafeUser[]> {
-        return User.findAll({where: {role}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
-    }
-
-    public static async getUsersByNickname(nickname: string, role?: Role): Promise<SafeUser[]> {
-        if(role) {
-            return User.findAll({where: {nickname, role}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
-        } else {
-            return User.findAll({where: {nickname}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
-        }
+    public static async getUsersByRole(role: string, nickname: string): Promise<SafeUser[]> {
+        return User.findAll({where: {role, nickname: {[Op.like]: `%${nickname}%`}}, attributes: ['id', 'email', 'nickname', 'avatar', 'role']});
     }
 
     public static async updateUser(userId: string, user: Partial<User>): Promise<void> {

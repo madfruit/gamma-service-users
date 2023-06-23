@@ -27,7 +27,7 @@ export default class User extends Model<User>{
 
     @AllowNull
     @Column(DataType.CHAR(400))
-    avatar: string
+    avatar?: string
 
     @Column(DataType.DATE)
     createdAt: Date

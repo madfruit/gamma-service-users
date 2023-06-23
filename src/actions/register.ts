@@ -27,22 +27,20 @@ export default new class Register implements Action {
             return checkResult;
         }
         let avatarKey;
-        if (!avatarFile) {
-            App.logError('No avatar sent');
-            return {success, message: 'Не надіслано файл'};
-        }
         if (Array.isArray(avatarFile)) {
             App.logError('Array sent instead of a file', avatarFile);
             return {success, message: 'Додано більше одного файлу. Будь ласка, спробуйте ще раз з одним файлом'};
         }
         try {
-            const {fileKeys} = await App.call<UploadFilesPayload, UploadFilesResult>(ServiceName.Files, FilesActionName.UploadFiles, {files: {avatar: avatarFile}});
-            const {avatar} = fileKeys;
-            if (!avatar) {
-                App.logError('File upload error');
-                return {success, message: 'Не вдалося завантажити файл! Спробуйте ще раз'};
+            if(avatarFile) {
+                const {fileKeys} = await App.call<UploadFilesPayload, UploadFilesResult>(ServiceName.Files, FilesActionName.UploadFiles, {files: {avatar: avatarFile}});
+                const {avatar} = fileKeys;
+                if (!avatar) {
+                    App.logError('File upload error');
+                    return {success, message: 'Не вдалося завантажити файл! Спробуйте ще раз'};
+                }
+                avatarKey = avatar;
             }
-            avatarKey = avatar;
         } catch (err) {
             App.logError('Call fileUpload failed');
         }
